@@ -92,8 +92,8 @@ module.exports = (robot) ->
 
     msg.reply hubot name if vcmd is 'up'
 
-    child = run 'vagrant', [vcmd], {cwd: cwd}, (result) -> msg.reply result
-    child.on 'close', () -> msg.reply MSG_DONE
+    #child = run 'vagrant', [vcmd], {cwd: cwd}, (result) -> msg.reply result
+    #child.on 'close', () -> msg.reply MSG_DONE
 
   robot.respond /(vagrant|va) list/i, (msg) ->
     config.refresh()
@@ -174,7 +174,7 @@ hubot = (name) ->
  \\ \\/ //  /_____\\
   \\__/+  |[^_/\\_]|
   |   | _|___@@__|__
-  +===+/  ///     \\_\
+  +===+/  ///     \\_\\
    | |_\\ /// HUBOT/\\\\
    |___/\\//      /  \\\\
          \\      /   +---+
