@@ -11,7 +11,7 @@ In hubot project repo, run:
 Then add **hubot-vagrant** to your `external-scripts.json`:
 
 ```json
-["hubot-hubot-vagrant"]
+["hubot-vagrant"]
 ```
 
 ## Commands
