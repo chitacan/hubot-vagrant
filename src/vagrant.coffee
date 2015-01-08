@@ -4,6 +4,7 @@
 # Commands:
 #   hubot vagrant create  <name> <repo>  - Downloads & creates Vagrant machine from given Vagrantfile url(github, gist repo only).
 #   hubot vagrant destroy <name> - Deletes machine.
+#   hubot vagrant format  <name> <json> - Formats Vagrantfile with string-template module.
 #   hubot vagrant list           - Prints current virtual machine list.
 #   hubot vagrant halt    <name> - Stops machine.
 #   hubot vagrant reload  <name> - Restarts machine.
@@ -22,6 +23,7 @@
 path = require 'path'
 fs   = require 'fs'
 url  = require 'url'
+fmt  = require 'string-template'
 
 class Config
   constructor: (file = '.hubot_vagrant_config.json', workDir = path.join 'Documents', 'workspace_virtual') ->
@@ -124,7 +126,7 @@ module.exports = (robot) ->
     child = run 'git', arg, opt, (result) -> msg.reply result
     child.on 'close', (code) ->
       msg.reply MSG_DONE
-      config.remove name unless code == 0
+      config.remove name if code is 0
       config.persist()
 
   robot.respond /(vagrant|va) update (.*)/i, (msg) ->
@@ -164,6 +166,47 @@ module.exports = (robot) ->
     fs.readFile file, (err, data) ->
       return msg.reply err if err
       msg.reply EOL + data + EOL + MSG_DONE
+
+  robot.respond /(vagrant|va) format (.*) (.*)/i, (msg) ->
+    name = msg.match[2]
+    cwd  = config.getMachinePath name
+    file = path.join cwd, 'Vagrantfile'
+    isExists = fs.existsSync file
+
+    try
+      keys = JSON.parse msg.match[3]
+    catch err
+      msg.reply 'JSON parse Error'
+      msg.reply err
+      return
+
+    return msg.reply ERR_EXE unless hasVagrant or hasGit
+    return msg.reply ERR_NAME name  unless cwd
+    return msg.reply ERR_SHOW unless isExists
+
+    checkout = () ->
+      arg = ['checkout', 'master']
+      child = run 'git', arg,  {cwd: cwd}, (result) -> msg.reply result
+      child.on 'close', (code) -> if code is 0 then branch()
+
+    branch = () ->
+      arg = ['checkout', '-B', 'format_' + Date.now()]
+      child = run 'git', arg,  {cwd: cwd}, (result) -> msg.reply result
+      child.on 'close', (code) -> if code is 0 then format()
+
+    format = () ->
+      read = fs.readFileSync file
+      fmtd = fmt read.toString(), keys
+      fs.writeFileSync file, fmtd
+      commit()
+
+    commit = () ->
+      arg = ['commit', '-a', '-m', 'format Vagrantfile.']
+      child = run 'git', arg,  {cwd: cwd}, (result) -> msg.reply result
+      child.on 'close', (code) -> if code is 0 then msg.reply MSG_DONE
+
+    msg.reply 'Formatting...'
+    checkout()
 
 hubot = (name) ->
   """

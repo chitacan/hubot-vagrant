@@ -4,22 +4,21 @@
   "version": "0.0.1",
   "author": "kyung yeol kim <chitacan@gmail.com>",
   "license": "MIT",
-
-  "keywords": ["hubot","hubot-scripts"],
-
+  "keywords": [
+    "hubot",
+    "hubot-scripts"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/chitacan/hubot-vagrant.git"
   },
-
   "bugs": {
     "url": "https://github.com/chitacan/hubot-vagrant/issues"
   },
-
   "dependencies": {
-    "coffee-script": "~1.6"
+    "coffee-script": "~1.6",
+    "string-template": "^0.2.0"
   },
-
   "devDependencies": {
     "mocha": "*",
     "chai": "*",
@@ -30,9 +29,7 @@
     "matchdep": "~0.1.2",
     "grunt-contrib-watch": "~0.5.3"
   },
-
   "main": "index.coffee",
-
   "scripts": {
     "test": "grunt test"
   }
