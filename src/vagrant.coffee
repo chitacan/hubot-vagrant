@@ -120,7 +120,7 @@ module.exports = (robot) ->
     isGist = repo.length is 20 and /\d/.test repo
     addr   = if isGist then url.resolve GIST, ref else url.resolve GITHUB, ref 
     
-    msg.reply 'Creating #{name}...'
+    msg.reply "Creating #{name}..."
     # what if directory exists??
     arg = ['clone', addr, name]
     opt = {cwd : config.cwd()}
@@ -153,7 +153,7 @@ module.exports = (robot) ->
     return msg.reply ERR_EXE unless hasVagrant or hasGit
     return msg.reply ERR_NAME name  unless cwd
 
-    msg.reply 'Destroying #{name}...'
+    msg.reply "Destroying #{name}..."
     child = run 'vagrant', ['destroy', '-f'], {cwd: cwd}, (result) -> msg.reply result
     child.on 'close', () -> msg.reply MSG_DONE
 
@@ -209,7 +209,7 @@ module.exports = (robot) ->
       child = run 'git', arg,  {cwd: cwd}, (result) -> msg.reply result
       child.on 'close', (code) -> if code is 0 then msg.reply MSG_DONE
 
-    msg.reply 'Formatting #{name}...'
+    msg.reply "Formatting #{name}..."
     checkout()
 
 hubot = (name) ->
