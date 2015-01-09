@@ -70,15 +70,16 @@ class Config
 
 config = new Config
 
-MSG_LIST    = "#{EOL}List of available machines#{EOL}"
-MSG_DONE    = '---DONE---'
+MSG_LIST = "#{EOL}List of available machines#{EOL}"
+MSG_DONE = '---DONE---'
 
-ERR_EXE     = 'Cannot found vagrant or git executable.'
-ERR_NAME    = (name) -> "Oops!!! cannot find #{name}"
-ERR_GITHUB  = "#{EOL}I'm Only support github.com."
-ERR_SHOW    = "#{EOL}Cannot find Vagrantfile."
+ERR_EXE  = 'Cannot found vagrant or git executable.'
+ERR_NAME = (name) -> "Oops!!! cannot find #{name}"
+ERR_REF  = "#{EOL}Not supported ref format."
+ERR_SHOW = "#{EOL}Cannot find Vagrantfile."
 
-HOST_GITHUB = 'github.com'
+GITHUB = 'https://github.com'
+GIST   = 'https://gist.github.com'
 
 module.exports = (robot) ->
   hasVagrant = hasExe 'vagrant'
@@ -110,14 +111,15 @@ module.exports = (robot) ->
 
   robot.respond /(vagrant|va) create (.*) (.*)/i, (msg) ->
     name = msg.match[2]
-    addr = msg.match[3]
-
-    { hostname } = url.parse addr
-    msg.reply "#{name}, #{addr}"
+    ref  = msg.match[3]
 
     return msg.reply ERR_EXE unless hasVagrant or hasGit
-    return msg.reply ERR_GITHUB if hostname.indexOf(HOST_GITHUB) is -1
+    return msg.reply ERR_REF unless ref.split('/').length is 2
 
+    repo   = ref.split('/')[1]
+    isGist = repo.length is 20 and /\d/.test repo
+    addr   = if isGist then url.resolve GIST, ref else url.resolve GITHUB, ref 
+    
     msg.reply 'Creating #{name}...'
     # what if directory exists??
     arg = ['clone', addr, name]
