@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "coffee-script": "~1.6",
+    "rimraf": "^2.2.8",
     "string-template": "^0.2.0"
   },
   "devDependencies": {

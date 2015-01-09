@@ -18,7 +18,7 @@ Then add **hubot-vagrant** to your `external-scripts.json`:
 
 ```
 hubot vagrant create  <name> <repo>  - Downloads & creates Vagrant machine from given Vagrantfile url(github, gist repo only).
-hubot vagrant destroy <name> - Deletes machine.
+hubot vagrant destroy <name> [-d]   - Destroy machine. ('-d' : delete directory)
 hubot vagrant format  <name> <json> - Formats Vagrantfile with string-template module.
 hubot vagrant list           - Prints current virtual machine list.
 hubot vagrant halt    <name> - Stops machine.

@@ -3,10 +3,11 @@
 #
 # Commands:
 #   hubot vagrant create  <name> <repo>  - Downloads & creates Vagrant machine from given Vagrantfile url(github, gist repo only).
-#   hubot vagrant destroy <name> - Deletes machine.
+#   hubot vagrant destroy <name> [-d]   - Destroy machine. ('-d' : delete directory)
 #   hubot vagrant format  <name> <json> - Formats Vagrantfile with string-template module.
 #   hubot vagrant list           - Prints current virtual machine list.
 #   hubot vagrant halt    <name> - Stops machine.
+#   hubot vagrant remove  <name> - Remove machine.
 #   hubot vagrant reload  <name> - Restarts machine.
 #   hubot vagrant show    <name> - Shows Vagrantfile.
 #   hubot vagrant status  <name> - Prints machine status.
@@ -24,6 +25,7 @@ path = require 'path'
 fs   = require 'fs'
 url  = require 'url'
 fmt  = require 'string-template'
+rm   = require 'rimraf'
 
 class Config
   constructor: (file = '.hubot_vagrant_config.json', workDir = path.join 'Documents', 'workspace_virtual') ->
@@ -146,8 +148,9 @@ module.exports = (robot) ->
     child = run 'git', arg, opt, (result) -> msg.reply result
     child.on 'close', () -> msg.reply MSG_DONE
 
-  robot.respond /(vagrant|va) destroy (.*)/i, (msg) ->
+  robot.respond /(vagrant|va) destroy (.*) (.*)/i, (msg) ->
     name = msg.match[2]
+    opt  = msg.match[3]
     cwd  = config.getMachinePath name
 
     return msg.reply ERR_EXE unless hasVagrant or hasGit
@@ -155,7 +158,11 @@ module.exports = (robot) ->
 
     msg.reply "Destroying #{name}..."
     child = run 'vagrant', ['destroy', '-f'], {cwd: cwd}, (result) -> msg.reply result
-    child.on 'close', () -> msg.reply MSG_DONE
+    child.on 'close', () ->
+      rm.sync cwd if opt is '-d'
+      config.remove name
+      config.persist()
+      msg.reply MSG_DONE
 
   robot.respond /(vagrant|va) show (.*)/i, (msg) ->
     name = msg.match[2]
