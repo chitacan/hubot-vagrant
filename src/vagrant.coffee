@@ -126,7 +126,7 @@ module.exports = (robot) ->
     child = run 'git', arg, opt, (result) -> msg.reply result
     child.on 'close', (code) ->
       msg.reply MSG_DONE
-      config.remove name if code is 0
+      config.remove name unless code is 0
       config.persist()
 
   robot.respond /(vagrant|va) update (.*)/i, (msg) ->
