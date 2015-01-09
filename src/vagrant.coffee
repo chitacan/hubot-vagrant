@@ -138,7 +138,7 @@ module.exports = (robot) ->
 
     # what if directory exists??
     arg = ['pull', '--rebase', '--stat']
-    opt = {cwd : config.cwd()}
+    opt = {cwd : cwd}
 
     child = run 'git', arg, opt, (result) -> msg.reply result
     child.on 'close', () -> msg.reply MSG_DONE
