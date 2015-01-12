@@ -142,7 +142,7 @@ module.exports = (robot) ->
     return msg.reply ERR_NAME name  unless cwd
 
     # what if directory exists??
-    arg = ['pull', '--rebase', '--stat']
+    arg = ['pull', '--rebase', '--stat', 'origin', 'master']
     opt = {cwd : cwd}
 
     child = run 'git', arg, opt, (result) -> msg.reply result
