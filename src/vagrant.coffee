@@ -176,7 +176,7 @@ module.exports = (robot) ->
 
     fs.readFile file, (err, data) ->
       return msg.reply err if err
-      msg.reply EOL + data + EOL + MSG_DONE
+      msg.reply '```' + EOL + data + EOL + '```' + MSG_DONE
 
   robot.respond /(vagrant|va) format (.*) (.*)/i, (msg) ->
     name = msg.match[2]
