@@ -7,7 +7,6 @@
 #   hubot vagrant format  <name> <json> - Formats Vagrantfile with string-template module.
 #   hubot vagrant list           - Prints current virtual machine list.
 #   hubot vagrant halt    <name> - Stops machine.
-#   hubot vagrant remove  <name> - Remove machine.
 #   hubot vagrant reload  <name> - Restarts machine.
 #   hubot vagrant show    <name> - Shows Vagrantfile.
 #   hubot vagrant status  <name> - Prints machine status.
@@ -221,7 +220,7 @@ module.exports = (robot) ->
 
 hubot = (name) ->
   """
-```#{EOL}
+```
  _     __
 /_/\\  /_/agrant up #{name} ...
 \\ \\ \\/ //  _____
@@ -235,7 +234,7 @@ hubot = (name) ->
           \\____/    |   |
            | //|    +===+
             \\//      |xx|
-#{EOL}```
+```
   """
 
 run = (cmd, arg, opt, cb) ->
