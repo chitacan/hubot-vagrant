@@ -176,7 +176,7 @@ module.exports = (robot) ->
 
     fs.readFile file, (err, data) ->
       return msg.reply err if err
-      msg.reply '```' + EOL + data + EOL + '```' + MSG_DONE
+      msg.reply '```' + data + '```' + MSG_DONE
 
   robot.respond /(vagrant|va) format (.*) (.*)/i, (msg) ->
     name = msg.match[2]
@@ -221,7 +221,7 @@ module.exports = (robot) ->
 
 hubot = (name) ->
   """
-#{EOL}
+```#{EOL}
  _     __
 /_/\\  /_/agrant up #{name} ...
 \\ \\ \\/ //  _____
@@ -235,7 +235,7 @@ hubot = (name) ->
           \\____/    |   |
            | //|    +===+
             \\//      |xx|
-#{EOL}
+#{EOL}```
   """
 
 run = (cmd, arg, opt, cb) ->
